@@ -12,7 +12,7 @@ import mouseHandler
 from NVDAObjects.UIA import ListItem, UIA
 import tones
 # Entfernen Sie das Kommentarzeichen (#) aus der nächsten Zeile, wenn (und sobald) die Datei zu einem Addon gehört. Dadurch werden Lokalisierungsfunktionen (Übersetzungsfunktionen) in Ihrer Datei aktiviert. Weitere Informationen finden Sie im Entwicklungshandbuch für NVDA-Addons.
-#addonHandler.initTranslation()
+addonHandler.initTranslation()
 _taborder = list()
 _tabindex = 0
 class EnpassListItem(ListItem):
@@ -25,7 +25,10 @@ class EnpassListItem(ListItem):
 
 class EnpassTab(UIA):
 	@script (
-		gestures=["kb:space", "kb:enter"])
+		gestures=["kb:space", "kb:enter"],
+		description=_("switches to the selected Tab in enpass"),
+		category=_("enpass")
+		)
 	def script_activatetab(self, gesture):
 		gesture.send()
 		api.getForegroundObject().children[1].firstChild.children[1].firstChild.firstChild.children[1].setFocus()
@@ -38,13 +41,16 @@ class AppModule(appModuleHandler.AppModule):
 
 	@script (
 		gesture="kb:F10",
-		description=_("activates the menubar"))
+		description=_("activates the menubar"),
+		category=_("enpass")
+		)
 	def script_clickmenubar(self, gesture):
 		api.getForegroundObject().children[1].firstChild.firstChild.firstChild.setFocus()
 
 	@script (
 		gesture="kb:F6",
-		description=_("activates the settings tab bar"))
+		description=_("activates the settings tab bar"),
+		category=_("enpass"))
 	def script_clicktabs(self, gesture):
 		try:
 			api.getForegroundObject().children[1].firstChild.children[1].children[1].setFocus()

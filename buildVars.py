@@ -17,14 +17,14 @@ addon_info = {
 	"addon_summary" : _("enpass"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description" : _("""Description for the add-on.
-It can span multiple lines."""),
+	"addon_description" : _("""improves accessibility of the password manager enpass.
+"""),
 	# version
-	"addon_version" : "0.1",
+	"addon_version" : "0.1.1",
 	# Author(s)
 	"addon_author" : u"David Parduhn <xkill85@gmx.net>",
 	# URL for the add-on documentation support
-	"addon_url" : None,
+	"addon_url" : "https://github.com/dave090679/enpass/releases",
 	# Documentation file name
 	"addon_docFileName" : "readme.html",
 	"lastTestedNVDAVersion": "2023.1",
