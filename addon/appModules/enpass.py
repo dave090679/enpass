@@ -21,6 +21,9 @@ class EnpassListItem(ListItem):
 		for x in self.children:
 			if x.role == controlTypes.Role.STATICTEXT:
 				l.append(x.name)
+			elif x.role == controlTypes.Role.EDITABLETEXT:
+				l.append(x.value)
+
 		return "\t".join(l)
 
 class EnpassTab(UIA):
