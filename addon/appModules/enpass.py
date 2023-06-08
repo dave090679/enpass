@@ -15,6 +15,15 @@ import tones
 addonHandler.initTranslation()
 _taborder = list()
 _tabindex = 0
+class EnpassEditableText(UIA):
+	def _get_name(self):
+		s = self.UIAElement.CurrentName
+		try:
+			s = self.previous.name
+		except:
+			pass
+		return s
+
 class EnpassListItem(ListItem):
 	def _get_name(self):
 		l = list()
@@ -23,8 +32,10 @@ class EnpassListItem(ListItem):
 				l.append(x.name)
 			elif x.role == controlTypes.Role.EDITABLETEXT:
 				l.append(x.value)
-
-		return "\t".join(l)
+		s = "\t".join(l)
+		if s == "":
+			s = self.UIAElement.CurrentName
+		return s
 
 class EnpassTab(UIA):
 	@script (
@@ -64,5 +75,7 @@ class AppModule(appModuleHandler.AppModule):
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
 		if obj.role == controlTypes.Role.LISTITEM:
 			clsList.insert(0,EnpassListItem)
+		elif obj.role == controlTypes.Role.EDITABLETEXT and obj.name == "":
+			clsList.insert(0,EnpassEditableText)
 		elif obj.role == controlTypes.Role.TAB and controlTypes.State.CHECKABLE in obj.states:
 			clsList.insert(0,EnpassTab)
