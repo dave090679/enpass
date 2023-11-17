@@ -20,7 +20,7 @@ addon_info = {
 	"addon_description" : _("""improves accessibility of the password manager enpass.
 """),
 	# version
-	"addon_version" : "0.1.3",
+	"addon_version" : "0.1.4",
 	# Author(s)
 	"addon_author" : u"David Parduhn <xkill85@gmx.net>",
 	# URL for the add-on documentation support

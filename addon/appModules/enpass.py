@@ -13,8 +13,6 @@ from NVDAObjects.UIA import ListItem, UIA
 import tones
 # Entfernen Sie das Kommentarzeichen (#) aus der nächsten Zeile, wenn (und sobald) die Datei zu einem Addon gehört. Dadurch werden Lokalisierungsfunktionen (Übersetzungsfunktionen) in Ihrer Datei aktiviert. Weitere Informationen finden Sie im Entwicklungshandbuch für NVDA-Addons.
 addonHandler.initTranslation()
-_taborder = list()
-_tabindex = 0
 class EnpassEditableText(UIA):
 	def _get_name(self):
 		s = self.UIAElement.CurrentName
@@ -23,7 +21,6 @@ class EnpassEditableText(UIA):
 		except:
 			pass
 		return s
-
 class EnpassListItem(ListItem):
 	def _get_name(self):
 		l = list()
@@ -36,30 +33,28 @@ class EnpassListItem(ListItem):
 		if s == "":
 			s = self.UIAElement.CurrentName
 		return s
-
-class EnpassTab(UIA):
-	@script (
-		gestures=["kb:space", "kb:enter"],
-		description=_("switches to the selected Tab in enpass"),
-		category=_("enpass")
-		)
-	def script_activatetab(self, gesture):
-		gesture.send()
-		api.getForegroundObject().children[1].firstChild.children[1].firstChild.firstChild.children[1].setFocus()
 class AppModule(appModuleHandler.AppModule):
 	def event_NVDAObject_init(self, obj):
 		obj.shouldAllowIAccessibleFocusEvent = True
 		if obj.name == "" and obj.childCount == 1 and obj.firstChild.name != "":
 			obj.name = obj.firstChild.name
-
-
+		if obj.role == controlTypes.Role.MENUBAR:
+			if not hasattr(self, "_menubars"):
+				self._menubars = list() 
+			self._menubars.append(obj) 
+		if obj.role == controlTypes.Role.TAB and controlTypes.State.CHECKED in obj.states:
+			if not hasattr(self, "_tabcontrols"):
+				self._tabcontrols = list() 
+			self._tabcontrols.append(obj)
 	@script (
 		gesture="kb:F10",
-		description=_("activates the menubar"),
-		category=_("enpass")
-		)
+		description=_("activates the menu bar"),
+		category=_("enpass"))
 	def script_clickmenubar(self, gesture):
-		api.getForegroundObject().children[1].firstChild.firstChild.firstChild.setFocus()
+		try:
+			seelf._menubars[0].setFocus()
+		except:
+			pass
 
 	@script (
 		gesture="kb:F6",
@@ -67,15 +62,12 @@ class AppModule(appModuleHandler.AppModule):
 		category=_("enpass"))
 	def script_clicktabs(self, gesture):
 		try:
-			api.getForegroundObject().children[1].firstChild.children[1].children[1].setFocus()
+			seelf._tabcontrols[0].setFocus()
 		except:
 			pass
 
-
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
-		if obj.role == controlTypes.Role.LISTITEM:
+		if obj.role == controlTypes.Role.LISTITEM and isinstance(obj, UIA):
 			clsList.insert(0,EnpassListItem)
 		elif obj.role == controlTypes.Role.EDITABLETEXT and obj.name == "":
 			clsList.insert(0,EnpassEditableText)
-		elif obj.role == controlTypes.Role.TAB and controlTypes.State.CHECKABLE in obj.states:
-			clsList.insert(0,EnpassTab)
